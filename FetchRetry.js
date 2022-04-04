@@ -1,11 +1,16 @@
 async function fetchRetry(url, fetchOptions = {}) {
-    function onError(err) {
-        return AvoidManyRequests(5000).then(() => {
-            console.log("Retrying...");
-            fetchRetry(url, fetchOptions);
-        });
-    }
-    return await fetch(url, fetchOptions).catch(onError);
+   try {
+       const results = await fetch(url, fetchOptions);
+       if(!results.ok){
+        throw new Error();
+       }else{
+        return results;
+       }
+   } catch (error) {
+        await AvoidManyRequests(5000);
+        console.log("Retrying...");
+        return fetchRetry(url, fetchOptions);
+   }
 }
 const AvoidManyRequests = (sleepTime = 1000) => {
     return new Promise((resolve) => setTimeout(resolve, sleepTime));
