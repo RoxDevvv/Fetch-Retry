@@ -12,5 +12,6 @@ import { fetchRetry } from "./FetchRetry";
         return json;
     }
 
-var test = await UsageExample("hello world");
-console.log(test);
+var test = await UsageExample({});
+console.log(test); // our reponse
+console.log("hello world"); // this line should fire only if we get data
